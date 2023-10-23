@@ -36,6 +36,7 @@ class LoginController extends BaseController
     }
 
     public function logout(){
+        session()->destroy();
         return view('login/login');
     }
 
