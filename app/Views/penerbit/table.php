@@ -9,6 +9,7 @@
         <tr>
             <th>Nama Penerbit</th>
             <th>Kota</th>
+            <th>Icon</th>
             <th>Edit</th>
             <th>Hapus</th>
             
@@ -19,6 +20,7 @@
             <tr>
                 <td><?=$v['penerbit'] ?></td>
                 <td><?=$v['kota'] ?></td>
+                <td> <img style="width: 100px;" src="<?=base_url('penerbit/icon/'.$v['id'].'.png')?>" />  </td>
                 <td> <a href="<?=base_url("/penerbit/edit/".$v['id'])?>">Edit</a> </td>
                 <td>
                     <form onsubmit="return confirm('yakin ke nak dihapus??')" action="<?=base_url('penerbit/hapus')?>" method="post">

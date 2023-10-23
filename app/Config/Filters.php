@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Filters\LoginFilter;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -23,7 +24,8 @@ class Filters extends BaseConfig
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
-        'secureheaders' => SecureHeaders::class,
+        'secureheaders' => SecureHeaders::class, 
+        'ceklogin'      => LoginFilter::class
     ];
 
     /**
@@ -66,5 +68,13 @@ class Filters extends BaseConfig
      * Example:
      * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
      */
-    public array $filters = [];
+    public array $filters = [
+        'ceklogin' => [
+            'before' => [
+                 '/',
+                 '/penerbit',
+                 '/penerbit/*'
+            ]
+        ]
+    ];
 }

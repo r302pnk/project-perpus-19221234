@@ -14,6 +14,14 @@ class PenerbitController extends BaseController
         ]);
     }
 
+    private function terimaFile($id){
+        $icon = request()->getFile('icon');
+        if($icon != null){
+            $target = WRITEPATH . '/uploads';
+            $icon->move($target, $id.".png", true);   
+        }
+    }
+
     public function create()
     {
         $data = [
@@ -24,13 +32,21 @@ class PenerbitController extends BaseController
         $model = new PenerbitModel();
         $id = (int)$this->request->getPost('id');
 
+
         if($id > 0){
-            $model->update($id, $data);
+           $hasil = $model->update($id, $data);
         }else{
-            $model->insert($data);
+           $hasil = $model->insert($data);
+           $id = $hasil;
         }
 
-        return redirect()->to(base_url('penerbit'));
+        if( $hasil == false){
+            return redirect()->to(base_url('penerbit/form'));
+        }else{
+            $this->terimaFile($id);
+            return redirect()->to(base_url('penerbit'));
+        }
+       
     }
 
     public function form(){
@@ -50,4 +66,15 @@ class PenerbitController extends BaseController
         $m->delete($id);
         return redirect()->to(base_url('penerbit'));
     }
+
+    public function tampilicon( $id){
+        $target = WRITEPATH . "/uploads/";
+        return response()
+            ->setHeader('Content-type', 'image/png')
+            ->setBody(
+                file_get_contents($target . $id . '.png')
+            );
+    }
+
+
 }
