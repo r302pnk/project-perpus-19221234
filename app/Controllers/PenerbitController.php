@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\PenerbitModel;
+use Config\Services;
 
 class PenerbitController extends BaseController
 {
@@ -16,10 +17,32 @@ class PenerbitController extends BaseController
 
     private function terimaFile($id){
         $icon = request()->getFile('icon');
-        if($icon != null){
+     
+        if($icon->isFile()){
             $target = WRITEPATH . '/uploads';
             $icon->move($target, $id.".png", true);   
         }
+    }
+
+    private function cek_validasi(){
+        $rules = [
+            'penerbit' => 'required|min_length[3]',
+            'kota'     => 'required|min_length[4]'
+        ];
+
+        $msg = [
+            'penerbit' => [
+                'required' => 'Penerbit harus diisikan',
+                'min_length' => 'Nama Penerbit Minimal harus 3 karakter'
+            ],
+            'kota' => [
+                'required' => 'Nama Kota penerbit harus diisikan',
+                'min_length' => 'Nama kota Penerbit Minimal harus 4 karakter'
+            ],
+        ];
+        return Services::validation()
+                    ->setRules($rules, $msg)
+                    ->withRequest(request())->run();
     }
 
     public function create()
@@ -31,6 +54,18 @@ class PenerbitController extends BaseController
 
         $model = new PenerbitModel();
         $id = (int)$this->request->getPost('id');
+
+        if($this->cek_validasi() == false){
+            session()->setFlashdata('validation', Services::validation());
+            
+            if($id > 0){
+                return redirect()->to(base_url('penerbit/edit/'.$id)); 
+            }else{    
+                return redirect()
+                        ->with('data', $data)
+                        ->to(base_url('penerbit/form'));
+            }
+        }
 
 
         if($id > 0){
@@ -50,13 +85,17 @@ class PenerbitController extends BaseController
     }
 
     public function form(){
-        return view('penerbit/form');
+        return view('penerbit/form', [
+            'data' => session('data'),
+            'validation' => session('validation')
+        ]);
     }
 
     public function edit($id){
         $r = (new PenerbitModel())->where('id', $id)->first();
         return view('penerbit/form', [
-            'data' => $r
+            'data' => $r,
+            'validation' => session('validation')
         ]);
     }
 

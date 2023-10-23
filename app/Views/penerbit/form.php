@@ -11,9 +11,11 @@
     <input type="hidden" name="id" value="<?=$data['id'] ?? ''?>" />
     <label for="namapenerbit">Nama Penerbit</label>
     <input type="text" name="penerbit" value="<?=$data['penerbit'] ?? ''?>" required><br>
+    <span><?=$validation?->getError("penerbit") ?? ''?></span><br/>
 
     <label for="kota">Kota</label>
     <input type="text" name="kota" value="<?=$data['kota'] ?? ''?>" required><br>
+    <span><?=$validation?->getError("kota") ?? ''?></span><br/>
 
     <label for="icon">Icon Penerbit</label>
     <input type="file" name="icon" ><br>
