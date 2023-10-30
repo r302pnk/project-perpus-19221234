@@ -23,26 +23,26 @@ class PenerbitController extends BaseController
             $icon->move($target, $id.".png", true);   
         }
     }
-
-    private function cek_validasi(){
+ 
+    public function cekvalidasi(){
         $rules = [
-            'penerbit' => 'required|min_length[3]',
-            'kota'     => 'required|min_length[4]'
+            'penerbit' => 'required|alpha_numeric_space|min_length[5]|max_length[255]',
+            'kota' => 'alpha_space'
         ];
-
-        $msg = [
+        $msg   = [
             'penerbit' => [
-                'required' => 'Penerbit harus diisikan',
-                'min_length' => 'Nama Penerbit Minimal harus 3 karakter'
+                'required' => 'Nama penerbit harus diisikan',
+                'alpha_numeric_space' => 'Nama penerbit harus berupa huruf dan angka ',
+                'min_length' => 'Nama penerbit minimal 5 huruf',
+                'max_length' => 'Nama penerbit maximal 255 huruf'
             ],
             'kota' => [
-                'required' => 'Nama Kota penerbit harus diisikan',
-                'min_length' => 'Nama kota Penerbit Minimal harus 4 karakter'
-            ],
+                'alpha_space' => 'Nama kota harus huruf'
+            ]
         ];
         return Services::validation()
-                    ->setRules($rules, $msg)
-                    ->withRequest(request())->run();
+                ->withRequest(request())
+                ->setRules($rules, $msg);
     }
 
     public function create()
@@ -52,22 +52,16 @@ class PenerbitController extends BaseController
             'kota'         => $this->request->getPost('kota')
         ]; 
 
-        $model = new PenerbitModel();
-        $id = (int)$this->request->getPost('id');
-
-        if($this->cek_validasi() == false){
-            session()->setFlashdata('validation', Services::validation());
+        if($this->cekvalidasi()->run() == false){
+            session()->setFlashdata('validasi', Services::validation());
             
-            if($id > 0){
-                return redirect()->to(base_url('penerbit/edit/'.$id)); 
-            }else{    
-                return redirect()
-                        ->with('data', $data)
-                        ->to(base_url('penerbit/form'));
-            }
+            return redirect()->to(base_url('penerbit/form'))
+                             ->with('data', $data);
         }
 
-
+        $model = new PenerbitModel();
+        $id = (int)$this->request->getPost('id');
+ 
         if($id > 0){
            $hasil = $model->update($id, $data);
         }else{
@@ -85,17 +79,18 @@ class PenerbitController extends BaseController
     }
 
     public function form(){
+        $validasi = session('validasi');
+      
         return view('penerbit/form', [
-            'data' => session('data'),
-            'validation' => session('validation')
+            'data' => session('data'), 
+            'validasi' => $validasi
         ]);
     }
 
     public function edit($id){
         $r = (new PenerbitModel())->where('id', $id)->first();
         return view('penerbit/form', [
-            'data' => $r,
-            'validation' => session('validation')
+            'data' => $r, 
         ]);
     }
 
