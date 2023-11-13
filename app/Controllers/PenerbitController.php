@@ -11,6 +11,8 @@ class PenerbitController extends BaseController
 
     public function index(){
         return view('penerbit/table', [
+            'menupenerbit' =>'active',
+            'penerbit' =>'menu-open',
             'daftar_penerbit' => (new PenerbitModel())->findAll()
         ]);
     }
@@ -62,15 +64,19 @@ class PenerbitController extends BaseController
         $model = new PenerbitModel();
         $id = (int)$this->request->getPost('id');
  
-        if($id > 0){
+        if($id > 0){ 
            $hasil = $model->update($id, $data);
         }else{
            $hasil = $model->insert($data);
            $id = $hasil;
         }
-
+return $id;
         if( $hasil == false){
-            return redirect()->to(base_url('penerbit/form'));
+            if($id > 0){
+                return redirect()->to(base_url('penerbit/edit/'.$id))->with("error","Gagal ubah data");
+            }else{
+                return redirect()->to(base_url('penerbit/form'));
+            }
         }else{
             $this->terimaFile($id);
             return redirect()->to(base_url('penerbit'));
@@ -83,12 +89,15 @@ class PenerbitController extends BaseController
       
         return view('penerbit/form', [
             'data' => session('data'), 
+            'penerbit' =>'menu-open',
+            'formpenerbit' => 'active',
             'validasi' => $validasi
         ]);
     }
 
     public function edit($id){
         $r = (new PenerbitModel())->where('id', $id)->first();
+ 
         return view('penerbit/form', [
             'data' => $r, 
         ]);

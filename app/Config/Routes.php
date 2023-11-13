@@ -17,3 +17,10 @@ $routes->get('/penerbit/icon/(:num).png', 'PenerbitController::tampilicon/$1');
 $routes->get('/login', 'LoginController::index');
 $routes->post('/login', 'LoginController::ceklogin');
 $routes->get('/logout', 'LoginController::logout');
+
+$routes->get('anggota', 'AnggotaController::index');
+
+$routes->get('peminjaman', 'PeminjamanController::index');
+$routes->post('peminjaman', 'PeminjamanController::simpan');
+$routes->get('peminjaman/form', 'PeminjamanController::form');
+$routes->get('peminjaman/edit/(:num)', 'PeminjamanController::edit/$1');

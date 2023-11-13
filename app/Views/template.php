@@ -32,6 +32,9 @@
   <link rel="stylesheet" href="<?=base_url()?>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="<?=base_url()?>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
+
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -121,6 +124,7 @@
 <script src="<?=base_url()?>/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="<?=base_url()?>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="<?=base_url()?>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
   $(function () {
